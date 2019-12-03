@@ -6,6 +6,9 @@
 
 ## Sample
 - DHTtester: [require install DHT11 library](https://github.com/adafruit/DHT-sensor-library) using library manager
+
+## Tips
+- Before running samples provide by library, must do action "Save as"
 ## Author
 songjiangzhang@hotmail.com
 

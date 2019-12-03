@@ -1,0 +1,4 @@
+{
+    "board": "sandeepmistry:nRF5:nRF52DK",
+    "configuration": "softdevice=none"
+}
