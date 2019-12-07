@@ -1,3 +1,8 @@
+#include <Adafruit_GFX.h>
+#include <Adafruit_SPITFT.h>
+#include <Adafruit_SPITFT_Macros.h>
+#include <gfxfont.h>
+
 // Example testing sketch for various DHT humidity/temperature sensors
 // Written by ladyada, public domain
 
