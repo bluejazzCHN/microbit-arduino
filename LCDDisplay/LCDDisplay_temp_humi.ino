@@ -44,50 +44,73 @@
 #include <LiquidCrystal.h>
 #include <Adafruit_Microbit.h>
 
+#include <Adafruit_GFX.h>
+#include <Adafruit_SPITFT.h>
+#include <Adafruit_SPITFT_Macros.h>
+#include <gfxfont.h>
+
+#define DHTPIN 0     // Digital pin connected to the DHT sensor
+#include "DHT.h"
+
+// Uncomment whatever type you're using!
+#define DHTTYPE DHT11   // DHT 11
+//#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
+//#define DHTTYPE DHT21   // DHT 21 (AM2301)
 
 Adafruit_Microbit_Matrix microbit;
 
+//initialize the library of DHT
+DHT dht(DHTPIN, DHTTYPE);
 
 // initialize the library by associating any needed LCD interface pin
 // with the arduino pin number it is connected to
 const int rs = 13, en = 14, d4 = 15, d5 = 10, d6 = 11, d7 = 12;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
-const int buttonA = 5;
-const int buttonB = 11;
-float temp = 0;
-void setup() {
 
-  // set up the LCD's number of columns and rows:
-  microbit.begin();
+const int buttonA = 5;
+bool buttonStatus = false;
+
+void setup() {
   pinMode(buttonA, INPUT_PULLUP);
-  pinMode(buttonB, INPUT_PULLUP);
-  Serial.begin(9600);
-  Serial.println("Bit connected!");
   lcd.begin(16, 2);
   // Print a message to the LCD.
-  lcd.print("MB is ready!");
+  lcd.print("Initializing.....!");
+  dht.begin();
   delay(2000);
 }
 
+
 void loop() {
-  microbit.show(microbit.HEART);
+
   if (!digitalRead(buttonA))
   {
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("B_A is pressed!");
+    buttonStatus = !buttonStatus;
   }
 
-//  if (!digitalRead(buttonB))
-//  {
-//    lcd.setCursor(0, 1);
-//    lcd.print("B_B is pressed!");
-//  }
-  // set the cursor to column 0, line 1
-  // (note: line 1 is the second row, since counting begins with 0):
-  lcd.setCursor(0, 1);
-  // print the number of seconds since reset:
-  lcd.print(millis() / 1000);
-
+  if(buttonStatus == true)
+  {
+    float h = dht.readHumidity();
+    float t = dht.readTemperature();
+    lcdDisplay(t,h);   
+  }
+  else
+  {
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("ON/OFF:press A!");
+  }
   delay(500);
+}
+
+void lcdDisplay(float t,float h)
+{
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Temp: ");
+  lcd.setCursor(6,0);
+  lcd.print(t);
+  lcd.setCursor(0,1);
+  lcd.print("Humi: ");
+  lcd.setCursor(6,1);
+  lcd.print(h);
 }
